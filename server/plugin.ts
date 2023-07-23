@@ -82,6 +82,24 @@ export class ObservabilityPlugin
       name: 'integration-instance',
       hidden: false,
       namespaceType: 'single',
+      management: {
+        defaultSearchField: 'name',
+        icon: 'dashboard',
+        getTitle(obj) {
+          return obj.attributes.title;
+        },
+        getEditUrl(obj) {
+          return `/management/opensearch-dashboards/objects/integration/${encodeURIComponent(
+            obj.id
+          )}`;
+        },
+        getInAppUrl(obj) {
+          return {
+            path: `/api/integrations/store/${encodeURIComponent(obj.id)}`,
+            uiCapabilitiesPath: 'management.integration',
+          };
+        },
+      },
       mappings: {
         dynamic: false,
         properties: {
