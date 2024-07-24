@@ -18,6 +18,107 @@ const staticAsset: JSONSchemaType<StaticAsset> = {
   additionalProperties: false,
 };
 
+const gettingStarted: JSONSchemaType<GettingStarted> = {
+  type: 'object',
+  properties: {
+    ingestion: { type: 'array', items: { type: 'string' } },
+    structured: { type: 'string' },
+    technology: { type: 'string' },
+    protocol: { type: 'array', items: { type: 'string' } },
+    'live-sample': { type: 'string' },
+    workflows: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          name: { type: 'string' },
+          description: { type: 'string' },
+          steps: {
+            type: 'array',
+            items: {
+              type: 'object',
+              properties: {
+                name: { type: 'string' },
+                label: { type: 'string' },
+                phase: { type: 'string' },
+                type: { type: 'string' },
+                content: { type: 'string' },
+                description: { type: 'string' },
+                'input-params': {
+                  type: 'array',
+                  items: {
+                    type: 'object',
+                    properties: {
+                      name: { type: 'string' },
+                      description: { type: 'string' },
+                      type: { type: 'string' },
+                      default: { type: ['string', 'number'], nullable: true },
+                    },
+                    required: ['name', 'description', 'type'],
+                    additionalProperties: false,
+                  },
+                  nullable: true,
+                },
+                info: { type: 'array', items: { type: 'string' }, nullable: true },
+              },
+              required: ['name', 'label', 'phase', 'type', 'content', 'description'],
+              additionalProperties: true,
+            },
+          },
+        },
+        required: ['name', 'description', 'steps'],
+        additionalProperties: true,
+      },
+    },
+    schema: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          type: { type: 'string' },
+          info: { type: 'array', items: { type: 'string' } },
+          content: { type: 'string' },
+          description: { type: 'string' },
+          'index-template': { type: 'string' },
+          'index-pattern-name': { type: 'string' },
+        },
+        required: [
+          'type',
+          'info',
+          'content',
+          'description',
+          'index-template',
+          'index-pattern-name',
+        ],
+        additionalProperties: true,
+      },
+    },
+    'index-patterns': {
+      type: 'object',
+      properties: {
+        type: { type: 'array', items: { type: 'string' } },
+        info: { type: 'array', items: { type: 'string' } },
+        description: { type: 'string' },
+        'index-pattern': { type: 'string' },
+        'index-patterns-name': { type: 'array', items: { type: 'string' } },
+      },
+      required: ['type', 'info', 'description', 'index-pattern', 'index-patterns-name'],
+      additionalProperties: true,
+    },
+  },
+  required: [
+    'ingestion',
+    'structured',
+    'technology',
+    'protocol',
+    'live-sample',
+    'workflows',
+    'schema',
+    'index-patterns',
+  ],
+  additionalProperties: true,
+};
+
 const templateSchema: JSONSchemaType<IntegrationConfig> = {
   type: 'object',
   properties: {
@@ -95,6 +196,7 @@ const templateSchema: JSONSchemaType<IntegrationConfig> = {
         additionalProperties: false,
       },
     },
+    gettingStarted: { ...gettingStarted, nullable: true },
     sampleData: {
       type: 'object',
       properties: {
@@ -107,7 +209,7 @@ const templateSchema: JSONSchemaType<IntegrationConfig> = {
     },
   },
   required: ['name', 'version', 'license', 'type', 'components', 'assets'],
-  additionalProperties: false,
+  additionalProperties: true,
 };
 
 const instanceSchema: JSONSchemaType<IntegrationInstance> = {
